@@ -1,195 +1,25 @@
-# Monophase <!-- omit in toc -->
+# 2023 하계통신학술대회 <!-- omit in toc -->
+## 팀 구성
+- 20191746 이영묵
+- 20181634 정우민
+## 저궤도위성 네트워크에서 Super Resolution을 활용한 하향링크 영상 전송에 관한 연구 <!-- omit in toc -->
+- ## 필요성
+  - 인공위성은 행성의 궤도를 돌도록 로켓을 이용해 쏘아 올린 인공장치로 정의된다. 인공위성은 인터넷 통신, 기상 관측 등 다양한 분야에서 활용되고 있으며, 최근 6G 통신의 핵심 기술로 주목받고 있다. SpaceX 등 세계적인 항공우주 기업들도 인공위성 시장을 먼저 선점하기 위해 Starlink 프로젝트 등 다양한 사업과 연구를 진행 중이다. 위성통신과 관련된 연구는 역사가 오래되었으며, 최근에는 위성 사진의 화질을 초해상화(super resolution; SR)를 통해 높이는 연구, 위성통신에 사용되는 변조 및 부호화(modulation coding scheme; MCS)에 대한 연구 등 다양한 연구들이 진행 중이다.
+  - 위성통신은 기상환경뿐만 아니라 대기환경에 크게 영향을 받으며, 위성의 빠른 이동 속도로 인한 도플러 시프트(Doppler shift), 위성과 지상국 사이의 앙각(elevation angle) 등의 요인으로 통신 환경이 크게 좌우된다. 본 연구에서는 빠르게 변하는 위성통신 환경에서 효율적이고 안정적인 위성통신 영상 서비스를 제공하기 위해 초해상화를 활용한 하향 링크 영상 전송 기법을 제안하고 성능평가를 진행한다. 
+- ## 시스템 모델
+  - ![image](https://github.com/0Jelly/0Jelly.github.io/assets/132974459/07748563-f4ce-466d-bb8b-d54f017d4b3b)
+  - 위 사진은 본 연구에서 고려하고 있는 시나리오를 보여준다. 위성은 위성과 지상국 사이의 무선 채널 상태에 따라 영상 전송 방식을 결정한다. 보다 구체적으로, 무선 채널 상태가 양호하다고 판단이 되면 원본 영상 데이터를 전송하고, 무선 채널 상태가 열악하다고 판단이 되면 영상 데이터를 축소하여 전송한다. 후자의 경우 지상국에서 초해상화를 통해 고해상도 영상으로 데이터를 복원한다. 본 연구에서는 원본 영상을 저해상도 영상으로 축소하는 과정에서 bicubic 보간법을 활용하였고, 영상을 고해상도 영상으로 복원하는 과정에서 SRGAN(Super Resolution Generative Adversarial Networks)과EDSR(Enhanced Deep Super Resolution Networks) 모델을 사용한다.
+- ## 모의실험 및 논의
+  - ### 기존 기법과 제안 기법의 전송 시간 비교·분석
+    - ![image](https://github.com/0Jelly/0Jelly.github.io/assets/132974459/dd18c325-b4d3-4581-8962-31abc0391251)
+    - 대역폭을 10MHz로 설정했을 때 원본 데이터를 직접 전송하는 경우와 영상의 전후처리(예: 축소 및 복원) 및 축소 데이터를 전송하는 경우의 관련된 지표의 소요 시간을 종합적으로 비교하여 보여주고 있다. 4배 축소된 영상을 전송하는데 약 18배(=3695ms/201ms)의 전송 시간 단축이 관찰되는데, 이는 축소 과정에서 적용한 보간법, 데이터 압축 등의 영향으로 영상의 용량이 정확히 1/16배가 되는 것은 아니기 때문이다. 영상 복원에 활용하는 모델에 따라 소요 시간이 상당히 달라지는 것을 관찰할 수 있으며, 고성능 하드웨어 활용을 통해  및 을 개선하여 를 개선할 수 있다. 
+  - ### 원본 영상 및 모델별 복구 영상 간 비교 (국립한밭대학교 산업정보관(N4동) 주변, 대한민국 대전광역시 유성구 덕명동 일원)
+    - ![image](https://github.com/0Jelly/0Jelly.github.io/assets/132974459/330dc334-6596-4c3d-9371-3db76adcd05b)
+    - 원본 영상과 4배 축소된 영상, 그리고 SRGAN과 EDSR 두 모델을 통해 복구된 영상을 비교하여 보여주고 있다.
+    - SRGAN의 PSNR(peak signal-to-noise ratio)값이 EDSR보다 낮지만, 육안으로 보기에는 SRGAN 모델의 초해상화 이미지가 EDSR 모델의 초해상화 이미지보다 좋은 결과를 볼 수 있다. 이는 PSNR이 높다고 해서 더 나은 결과를 보장하지 않는다고 볼 수 있으며, 영상을 가지고 객체 검출 등 추가적인 임무를 진행하게 될 경우, 특정 임무의 달성도에 미치는 영향은 독립적일 수 있기 때문에 결과를 해석할 때 PSNR만을 가지고 개선/열화 여부를 파악해서는 안된다는 것을 의미한다.
+  - ### 대역폭에 따른 임무 완수 시간
+    - ![image](https://github.com/0Jelly/0Jelly.github.io/assets/132974459/6ad31009-f05b-41ea-a844-72982efa65be)
+    - 대역폭에 따라 원본 데이터 및 축소 데이터의 전송시간을 보여주고 있으며, 활용할 수 있는 대역폭이 충분하지 않은 환경에 서 본 연구에서 제안하는 방법이 보다 효과적인 것을 확인하였으며,향상된 성능의 하드웨어를 사용한다면 원본을 전송하는 경우보다 더 나은 성능을 기대할 수 있다.
+  - 추후에는 목표(target) PSNR을 달성하여 전송 시간을 최소화할 수 있도록 축소 여부를 결정하는 최적의 임계값(threshold)을 도출하는 연구를 진행할 예정이다.
 
-Monophase is *a one-column minimal responsive Jekyll blog theme*.
 
-One of the purposes of Monophase is to be an alternative option to the default theme of Jekyll—[Minima](https://github.com/jekyll/minima). Monophase is still keeping minimal, but meanwhile, more beautiful and mellow, and doesn't lose some useful basic features, such as archive.
-
-Check the *[live demo](https://zivlog.io/monophase/)*.
-
-![Screenshot Light](screenshot-light.png)
-![Screenshot Dark](screenshot-dark.png)
-
-## Highlight Features <!-- omit in toc -->
-
-- [Normalize.css](https://github.com/necolas/normalize.css)
-- [Open Color](https://github.com/yeun/open-color)
-- [Font Awesome](https://fontawesome.com/)
-- [Disqus](https://disqus.com/)
-- [MathJax](https://www.mathjax.org/)
-- [Google Analytics 4](https://support.google.com/analytics/answer/10089681?hl=en)
-- [Jekyll Feed](https://github.com/jekyll/jekyll-feed/)
-- [Jekyll Paginate](https://github.com/jekyll/jekyll-paginate)
-- [Jekyll SEO Tag](https://github.com/jekyll/jekyll-seo-tag/)
-- Related posts (time-based, because Jekyll) below each post
-- Dark mode, via [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme)
-- Archive implemented by pure [Liquid](https://shopify.github.io/liquid/)
-
-## Table of Contents <!-- omit in toc -->
-
-- [Installation](#installation)
-- [Usage](#usage)
-  - [Global Configuration](#global-configuration)
-  - [Post Configuration](#post-configuration)
-  - [Homepage](#homepage)
-  - [Custom Head](#custom-head)
-  - [Navigation](#navigation)
-  - [Social Links](#social-links)
-  - [Alert Messages](#alert-messages)
-  - [Alignment](#alignment)
-  - [Google Analytics 4](#google-analytics-4)
-  - [Archive](#archive)
-- [Contributing](#contributing)
-- [Development](#development)
-- [License](#license)
-
-## Installation
-
-Add this line to your Jekyll site's `Gemfile`:
-
-```ruby
-gem "monophase"
-```
-
-And add this line to your Jekyll site's `_config.yml`:
-
-```yaml
-theme: monophase
-```
-
-And then execute:
-
-```shell
-bundle
-```
-
-Or install it yourself as:
-
-```shell
-gem install monophase
-```
-
-You can also install the latest code via [`jekyll-remote-theme`](https://github.com/benbalter/jekyll-remote-theme):
-
-1. Add this line to your Jekyll site's `Gemfile`:
-
-    ```ruby
-    gem "jekyll-remote-theme"
-    ```
-
-2. Add these lines to your Jekyll site's `_config.yml`:
-
-    ```ruby
-    plugins:
-      - jekyll-remote-theme
-
-    remote_theme: zivhub/monophase@main
-    ```
-
-## Usage
-
-### Global Configuration
-
-| Variable | Type | Default | Specification |
-| -------- | ---- | ------- | ------------- |
-| `title` | String | --- | The title of the website |
-| `tagline` | String | --- | The tagline of the website |
-| `lang` | String | `en` | The language of pages; The value can be overwritten by the `lang` variable on each page |
-| `author.name` | String | --- | The name of the website author |
-| `author.url` | String | --- | A URL of the website author |
-| `tags_path` | String | --- | A path to the archive-by-tags page; It is used by tags on each post |
-| `categories_path` | String | --- | A path to the archive-by-categories page; It is used by categories on each post |
-| `disqus` | String | --- | Disqus short name |
-| `google_analytics` | String | --- | Google Analytics 4 Measurement ID |
-
-### Post Configuration
-
-| Variable | Type | Default | Specification |
-| -------- | ---- | ------- | ------------- |
-| `description` | String | --- | A description of the current post |
-| `last_modified_at` | String | --- | The date of the last modification you made on a post after its publishing |
-| `author` | String or Array | --- | The author name(s) of the post |
-| `comments` | Boolean | `true` | Does enable the Disqus comment system |
-| `math` | Boolean | `false` | Does enable MathJax on this page |
-
-### Homepage
-
-You can create a homepage for your blog by setting `layout: home` in your `index.html`.
-
-### Custom Head
-
-Monophase leaves a placeholder to allow defining custom head. All you need to do is putting data into `_includes/custom-head.html`, and they would be automatically included in `<head>`.
-
-### Navigation
-
-The navigation bar of Monophase is configurable. You just need to specify titles and URLs in the file `_data/navigation.yml`, for example,
-
-```yml
-- title: About
-  url: /about/
-- title: Archive
-  url: /archive/
-- title: Categories
-  url: /categories/
-```
-
-### Social Links
-
-Monophase allows you to show social links on the website. All you need to do is creating a file `_data/social.yml`, for example,
-
-```yml
-- title: Email
-  url: mailto:zivmsg@gmail.com
-  icon: fas fa-envelope
-- title: Twitter
-  url: https://twitter.com/zivtwt
-  icon: fab fa-twitter
-- title: GitHub
-  url: https://github.com/zivhub
-  icon: fab fa-github
-```
-
-### Alert Messages
-
-Monophase provides some predefined classes to specify different levels of **alert messages**. In order of tone from light to heavy, they are: `message-info`, `message-warning`, and `message-danger`. You may add it to single elements like a `<p>`, or to a parent if there are multiple elements to show.
-
-### Alignment
-
-Monophase also provides some predefined classes to specify the alignment of HTML elements—e.g. images. They are `align-center`, `align-left`, and `align-right`.
-
-### Google Analytics 4
-
-To enable [Google Analytics 4](https://support.google.com/analytics/answer/10089681?hl=en), you just need to set the [Measurement ID](https://support.google.com/analytics/answer/7372977?hl=en) in your `_config.yml`, for example,
-
-```yml
-google_analytics: G-XXXXXXX
-```
-
-### Archive
-
-Monophase provides some built-in archive pages. It is implemented in pure Liquid. If you want to archive posts by years, you can create a page and put these code in it:
-
-```yml
----
-layout: archive
-type: years
----
-```
-
-Similarly, if you want to archive posts by categories or tags, you can set the `type` property as `categories` or `tags`.
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at [https://github.com/zivhub/monophase](https://github.com/zivhub/monophase). This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
-
-## Development
-
-To set up your environment to develop this theme, run `bundle install`.
-
-Your theme is setup just like a normal Jekyll site! To test your theme, run `bundle exec jekyll serve` and open your browser at `http://localhost:4000`. This starts a Jekyll server using your theme. Add pages, documents, data, etc. like normal to test your theme's contents. As you make modifications to your theme and to your content, your site will regenerate and you should see the changes in the browser after a refresh, just like normal.
-
-When your theme is released, only the files in `_layouts`, `_includes`, `_sass` and `assets` tracked with Git will be bundled.
-To add a custom directory to your theme-gem, please edit the regexp in `monophase.gemspec` accordingly.
-
-## License
-
-The theme is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
